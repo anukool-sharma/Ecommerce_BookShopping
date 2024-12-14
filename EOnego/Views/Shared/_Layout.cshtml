@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+@using EOnego.Utility
+@inject IHttpContextAccessor httpContextAccessor
+@using Microsoft.AspNetCore.Http
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EOnego</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EOnego.styles.css" asp-append-version="true" />
+    @*CSS REF*@
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-info border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EOnego</a>*@
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="home" asp-action="index">home</a>
+                        </li>
+                        @*<li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>*@
+
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Content Management</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CoverType" asp-action="Index">CoverType</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product </a>
+                                </div>
+                            </li>
+                        }
+
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Company/User</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">User</a>
+
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Order Management</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AllOrders" asp-action="Index">All Orders</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="DateWiseOrders" asp-action="Index">DateWiseOrder</a>
+
+                                </div>
+                            </li>
+                        }
+
+                        @*For Session*@
+                        @if (httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount) != null && httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount) != 0)
+                        {
+                            var count = httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount);
+                            <li>
+                                <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link text-white"><i class="fas fa-shopping-cart fa-3x"></i>&nbsp;(@count)</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="nav-link text-white"><i class="fas fa-shopping-cart fa-3x"></i>&nbsp;(0)</a>
+                            </li>
+                        }
+
+                    </ul>
+
+
+
+
+
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container text-danger">
+            &copy; 2024 - Ecommerce Shopping by Anonymous
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @*JS REF*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @*<script src="https://kit.fontawesome.com/e19c476714.js"></script>*@
+    <script src="https://kit.fontawesome.com/84de6e6f6a.js" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

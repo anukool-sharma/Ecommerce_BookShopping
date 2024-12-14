@@ -1,0 +1,59 @@
+﻿@model IEnumerable<EOnego.Models.OrderHeader>
+<form>
+    <div class="row align-items-center">
+        <div class="col-3">
+            <label for="fDate">From</label>
+            <input type="date" class="form-control" name="fDate" id="fDate" />
+        </div>
+        <div class="col-3">
+            <label for="toDate">To</label>
+            <input type="date" class="form-control" name="toDate" id="toDate" />
+        </div>
+        <div class="col-3">
+            <label for="ListOrder">Status</label>
+            @Html.DropDownList("ListOrder", ViewBag.ListOption, "Order Status", new { @class = "form-control btn btn-outline-dark" })
+        </div>
+        <div class="col-3">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary form-control">GO</button>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="text-primary border-bottom"><b>Filtered Orders</b></h2>
+        <div class="container rounded border p-2 m-2">
+            <table class="table table-bordered"> 
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Order Date</th>
+                        <th>Order Status</th>
+                        <th>Customer Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(Model !=null && Model.Any())
+                    {
+                        foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.Id</td>
+                                <td>@order.OrderDate.ToShortDateString()</td>
+                                <td>@order.OrderStatus</td>
+                                <td>@order.ApplicationUser.UserName</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                          <td colspan="4">No Orders Found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
